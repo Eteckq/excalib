@@ -3,6 +3,7 @@ import { Resources } from "../../resources";
 import { BaseEnemyShip } from "./base-enemy";
 import { EnemyBullet } from "../bullets/enemy-bullet";
 import { Player } from "../player";
+import { HEIGHT, WIDTH } from "../../constants";
 
 const COLLIDER_POINTS: [number, number][] = [
   [-17, 28.5],
@@ -22,7 +23,7 @@ const COLLIDER_POINTS: [number, number][] = [
 ];
 
 const SPRITE = new Sprite({
-  image: Resources.EnemyBlack1,
+  image: Resources.Enemy1,
   destSize: {
     height: 60,
     width: 65,
@@ -36,6 +37,14 @@ const COLLIDER = new PolygonCollider({
 export class EnemyShip01 extends BaseEnemyShip {
   constructor(x: number, y: number) {
     super(x, y, 20, SPRITE, COLLIDER);
+
+    this.actions.repeatForever((repeatCtx) => {
+      repeatCtx.moveTo(
+        Math.random() * WIDTH,
+        (Math.random() * HEIGHT) / 2,
+        100
+      );
+    });
   }
 
   move(engine: Engine<any>, delta: number, player: Player) {}

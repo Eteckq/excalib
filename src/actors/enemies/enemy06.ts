@@ -11,7 +11,7 @@ import { BaseEnemyShip } from "./base-enemy";
 import { Player } from "../player";
 
 const SPRITE = new Sprite({
-  image: Resources.UfoRed,
+  image: Resources.Enemy6,
 });
 
 const COLLIDER = new CircleCollider({
@@ -25,7 +25,5 @@ export class EnemyShip06 extends BaseEnemyShip {
 
   move(engine: Engine<any>, delta: number) {}
 
-  shoot(player: Player) {
-    console.log("shoot");
-  }
+  shoot(player: Player) {}
 }

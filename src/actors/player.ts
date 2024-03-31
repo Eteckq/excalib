@@ -1,5 +1,7 @@
 import {
   Actor,
+  Collider,
+  CollisionContact,
   CollisionType,
   Color,
   Engine,
@@ -7,6 +9,7 @@ import {
   Keys,
   ParticleEmitter,
   PolygonCollider,
+  Side,
   Vector,
   vec,
 } from "excalibur";
@@ -14,6 +17,8 @@ import { Resources } from "../resources";
 import { Weapon } from "./weapons/weapons";
 import { HEIGHT, WIDTH } from "../constants";
 import { PlayerCollisionMask } from "../colliders";
+import { BasicBullet } from "./bullets/bullet";
+import { EnemyBullet } from "./bullets/enemy-bullet";
 
 const COLLIDER_POINTS: [number, number][] = [
   [6.5, 37.5],
@@ -67,6 +72,17 @@ export class Player extends Actor {
     });
     this.graphics.add(Resources.PlayerShip.toSprite());
     this.addTag("player");
+  }
+
+  onCollisionStart(
+    self: Collider,
+    other: Collider,
+    side: Side,
+    contact: CollisionContact
+  ): void {
+    if (other.owner instanceof EnemyBullet) {
+      other.owner.kill();
+    }
   }
 
   onInitialize(engine: Engine): void {

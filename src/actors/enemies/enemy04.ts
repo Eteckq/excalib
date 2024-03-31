@@ -21,7 +21,7 @@ const COLLIDER_POINTS: [number, number][] = [
 ];
 
 const SPRITE = new Sprite({
-  image: Resources.EnemyBlack4,
+  image: Resources.Enemy4,
   destSize: {
     height: 160,
     width: 120,
@@ -39,7 +39,5 @@ export class EnemyShip04 extends BaseEnemyShip {
 
   move(engine: Engine<any>, delta: number) {}
 
-  shoot(player: Player) {
-    console.log("shoot");
-  }
+  shoot(player: Player) {}
 }

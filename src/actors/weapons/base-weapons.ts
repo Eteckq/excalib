@@ -1,5 +1,5 @@
 import { Collider, CollisionContact, Engine, Side, Vector } from "excalibur";
-import { Bullet } from "../bullets/bullet";
+import { BasicBullet } from "../bullets/bullet";
 import { Player } from "../player";
 
 export abstract class BaseWeapon {

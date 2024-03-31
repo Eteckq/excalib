@@ -1,24 +1,14 @@
 import { Actor, CollisionType, vec } from "excalibur";
 import { Resources } from "../../resources";
 import { PlayerCollisionMask } from "../../colliders";
+import { BasePlayerBullet } from "./base-player-bullet";
 
-export class Bullet extends Actor {
-  private damage = 10;
+export class BasicBullet extends BasePlayerBullet {
   constructor(x: number, y: number) {
-    super({
-      x: x,
-      y: y,
-      width: 8,
-      height: 30,
-      vel: vec(0, -600),
-      collisionType: CollisionType.Passive,
-      collisionGroup: PlayerCollisionMask,
-    });
+    super(x, y, 8, 30, 10);
+
+    this.vel = vec(0, -600);
 
     this.graphics.add(Resources.LaserBlue.toSprite());
   }
-  public getDamage() {
-    return this.damage;
-  }
-  public onInitialize() {}
 }

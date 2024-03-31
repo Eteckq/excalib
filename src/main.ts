@@ -21,4 +21,4 @@ class Shooter extends Engine {
 
 export const shooter = new Shooter();
 shooter.initialize();
-shooter.showDebug(true);
+// shooter.showDebug(true);

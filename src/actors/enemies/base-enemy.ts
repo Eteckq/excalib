@@ -17,11 +17,12 @@ import {
   vec,
 } from "excalibur";
 import { EnemyCollisionMask } from "../../colliders";
-import { Bullet } from "../bullets/bullet";
+import { BasicBullet } from "../bullets/bullet";
 import { HEIGHT, WIDTH } from "../../constants";
 import { Player } from "../player";
 
 export abstract class BaseEnemyShip extends Actor {
+  private dying = false;
   protected player: Player | undefined = undefined;
   constructor(
     x: number,
@@ -71,7 +72,7 @@ export abstract class BaseEnemyShip extends Actor {
       contact.points[0].x - this.pos.x,
       contact.points[0].y - this.pos.y
     );
-    if (other.owner instanceof Bullet) {
+    if (other.owner instanceof BasicBullet) {
       other.owner.kill();
       this.damage(other.owner.getDamage());
     }
@@ -91,6 +92,7 @@ export abstract class BaseEnemyShip extends Actor {
   }
 
   private _shoot() {
+    if (this.dying) return;
     this.shoot(this.getPlayer());
     this.scene?.engine.clock.schedule(() => {
       this._shoot();
@@ -98,10 +100,14 @@ export abstract class BaseEnemyShip extends Actor {
   }
 
   private damage(value: number) {
+    if (this.dying) return;
     this.health -= value;
     if (this.health <= 0) {
       this.destroyParticle();
-      this.actions.scaleTo(Vector.Zero, Vector.One.scaleEqual(8)).die();
+      this.dying = true;
+      this.body.collisionType = CollisionType.PreventCollision;
+      this.actions.clearActions();
+      this.actions.scaleTo(Vector.Zero, new Vector(8, 8)).die();
     }
   }
 
