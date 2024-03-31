@@ -1,18 +1,24 @@
-import { Engine } from "excalibur";
-import { Player } from "./player";
+import { DisplayMode, Engine } from "excalibur";
 import { loader } from "./resources";
+import { HEIGHT, WIDTH } from "./constants";
+import { Game } from "./scenes/game";
+import { DevTool } from "@excaliburjs/dev-tools";
 
-class Game extends Engine {
-    constructor() {
-      super({width: 800, height: 600});
-    }
-    initialize() {
-      const player = new Player();
-      this.add(player);
-
-      this.start(loader);
-    }
+class Shooter extends Engine {
+  constructor() {
+    super({ width: WIDTH, height: HEIGHT, displayMode: DisplayMode.FitScreen });
   }
-  
-  export const game = new Game();
-  game.initialize();
+  initialize() {
+    this.on("hidden", () => {
+      // this.stop();
+    });
+
+    this.add("game", new Game());
+    this.start(loader);
+    this.goToScene("game");
+  }
+}
+
+export const shooter = new Shooter();
+shooter.initialize();
+shooter.showDebug(true);

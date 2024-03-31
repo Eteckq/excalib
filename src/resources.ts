@@ -1,8 +1,12 @@
 import { ImageSource, Loader } from "excalibur";
-import sword from "./images/sword.png";
+import playerShip from "./images/playerShip1_blue.png";
+import laserBlue from "./images/laserBlue04.png";
+import enemyBlack1 from "./images/enemyBlack1.png";
 
 export const Resources = {
-  Sword: new ImageSource(sword)
+  PlayerShip: new ImageSource(playerShip),
+  LaserBlue: new ImageSource(laserBlue),
+  EnemyBlack1: new ImageSource(enemyBlack1),
 } as const;
 
 export const loader = new Loader();

@@ -7,8 +7,7 @@
     "dev": "vite",
     "start": "vite",
     "build": "tsc && vite build",
-    "serve": "vite preview",
-    "test": "npm run build && ex-test -d ./dist -t ./test/test.js"
+    "serve": "vite preview"
   },
   "repository": {
     "type": "git",
@@ -28,7 +27,6 @@
   "homepage": "https://github.com/excaliburjs/template-ts-vite#readme",
   "devDependencies": {
     "excalibur": "0.29.1",
-    "typescript": "5.4.3",
     "vite": "5.2.7"
   },
   "dependencies": {
