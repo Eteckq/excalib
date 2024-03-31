@@ -3,12 +3,20 @@ import playerShip from "./images/playerShip1_blue.png";
 import laserBlue from "./images/laserBlue04.png";
 import enemyBlack1 from "./images/enemyBlack1.png";
 import enemyBlack2 from "./images/enemyBlack2.png";
+import enemyBlack3 from "./images/enemyBlack3.png";
+import enemyBlack4 from "./images/enemyBlack4.png";
+import enemyBlack5 from "./images/enemyBlack5.png";
+import ufoRed from "./images/ufoRed.png";
 
 export const Resources = {
   PlayerShip: new ImageSource(playerShip),
   LaserBlue: new ImageSource(laserBlue),
   EnemyBlack1: new ImageSource(enemyBlack1),
   EnemyBlack2: new ImageSource(enemyBlack2),
+  EnemyBlack3: new ImageSource(enemyBlack3),
+  EnemyBlack4: new ImageSource(enemyBlack4),
+  EnemyBlack5: new ImageSource(enemyBlack5),
+  UfoRed: new ImageSource(ufoRed),
 } as const;
 
 export const loader = new Loader();
