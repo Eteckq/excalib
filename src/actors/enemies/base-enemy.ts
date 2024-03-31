@@ -33,17 +33,17 @@ export abstract class BaseEnemyShip extends Actor {
   }
 
   public onInitialize(engine: Engine) {
-    const P: [number, number][] = [];
-    engine.input.pointers.primary.on("down", (evt) => {
-      let points = P;
-      points.push([evt.worldPos.x - this.pos.x, evt.worldPos.y - this.pos.y]);
-      this.collider.set(
-        new PolygonCollider({
-          points: points.map((p) => vec(p[0], p[1])),
-        })
-      );
-      console.log(JSON.stringify(points));
-    });
+    // const P: [number, number][] = [];
+    // engine.input.pointers.primary.on("down", (evt) => {
+    //   let points = P;
+    //   points.push([evt.worldPos.x - this.pos.x, evt.worldPos.y - this.pos.y]);
+    //   this.collider.set(
+    //     new PolygonCollider({
+    //       points: points.map((p) => vec(p[0], p[1])),
+    //     })
+    //   );
+    //   console.log(JSON.stringify(points));
+    // });
   }
 
   onCollisionStart(
