@@ -32,6 +32,9 @@ const COLLIDER_POINTS: [number, number][] = [
   [-6.5, 37.5],
 ];
 
+const COLLIDER = new PolygonCollider({
+  points: COLLIDER_POINTS.map((p) => vec(p[0], p[1])),
+}).triangulate();
 export class Player extends Actor {
   private keysPressed: Keys[] = [];
 
@@ -60,11 +63,10 @@ export class Player extends Actor {
       y: 600 - 40,
       collisionType: CollisionType.Fixed,
       collisionGroup: PlayerCollisionMask,
-      collider: new PolygonCollider({
-        points: COLLIDER_POINTS.map((p) => vec(p[0], p[1])),
-      }).triangulate(),
+      collider: COLLIDER,
     });
     this.graphics.add(Resources.PlayerShip.toSprite());
+    this.addTag("player");
   }
 
   onInitialize(engine: Engine): void {
@@ -82,7 +84,7 @@ export class Player extends Actor {
 
     const spacePressed = this.keysPressed.find((k) => k == Keys.Space);
     this.weapons.map((w) => w.reduceCooldown(delta));
-    if (spacePressed) this.weapons.map((w) => w.shoot(this, engine));
+    if (spacePressed) this.weapons.map((w) => w.tryToShoot(this, engine));
   }
 
   private move() {

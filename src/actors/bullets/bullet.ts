@@ -3,6 +3,7 @@ import { Resources } from "../../resources";
 import { PlayerCollisionMask } from "../../colliders";
 
 export class Bullet extends Actor {
+  private damage = 10;
   constructor(x: number, y: number) {
     super({
       x: x,
@@ -16,6 +17,8 @@ export class Bullet extends Actor {
 
     this.graphics.add(Resources.LaserBlue.toSprite());
   }
-
+  public getDamage() {
+    return this.damage;
+  }
   public onInitialize() {}
 }

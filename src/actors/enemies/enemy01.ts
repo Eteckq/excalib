@@ -1,6 +1,8 @@
-import { PolygonCollider, Sprite, vec } from "excalibur";
+import { Engine, PolygonCollider, Sprite, Vector, vec } from "excalibur";
 import { Resources } from "../../resources";
 import { BaseEnemyShip } from "./base-enemy";
+import { EnemyBullet } from "../bullets/enemy-bullet";
+import { Player } from "../player";
 
 const COLLIDER_POINTS: [number, number][] = [
   [-17, 28.5],
@@ -29,10 +31,19 @@ const SPRITE = new Sprite({
 
 const COLLIDER = new PolygonCollider({
   points: COLLIDER_POINTS.map((p) => vec(p[0], p[1])),
-});
+}).triangulate();
 
 export class EnemyShip01 extends BaseEnemyShip {
   constructor(x: number, y: number) {
-    super(x, y, SPRITE, COLLIDER);
+    super(x, y, 20, SPRITE, COLLIDER);
+  }
+
+  move(engine: Engine<any>, delta: number, player: Player) {}
+
+  shoot(player: Player) {
+    const bullet = new EnemyBullet(this.pos.x, this.pos.y);
+
+    bullet.vel = new Vector(10, 200);
+    this.scene?.add(bullet);
   }
 }

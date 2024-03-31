@@ -1,5 +1,7 @@
 import {
   Actor,
+  CircleCollider,
+  Clock,
   Collider,
   CollisionContact,
   CollisionType,
@@ -10,29 +12,37 @@ import {
   PolygonCollider,
   Side,
   Sprite,
+  Timer,
   Vector,
   vec,
 } from "excalibur";
 import { EnemyCollisionMask } from "../../colliders";
 import { Bullet } from "../bullets/bullet";
+import { HEIGHT, WIDTH } from "../../constants";
+import { Player } from "../player";
 
 export abstract class BaseEnemyShip extends Actor {
-  constructor(x: number, y: number, sprite: Sprite, collider: Collider) {
+  protected player: Player | undefined = undefined;
+  constructor(
+    x: number,
+    y: number,
+    private health: number,
+    sprite: Sprite,
+    collider: Collider
+  ) {
     super({
       x: x,
       y: y,
-      // vel: vec(3, 5),
       collisionType: CollisionType.Passive,
 
       collisionGroup: EnemyCollisionMask,
-      collider:
-        collider instanceof PolygonCollider ? collider.triangulate() : collider,
+      collider: collider,
     });
 
     this.graphics.add(sprite);
   }
 
-  public onInitialize(engine: Engine) {
+  onInitialize(engine: Engine) {
     // const P: [number, number][] = [];
     // engine.input.pointers.primary.on("down", (evt) => {
     //   let points = P;
@@ -44,6 +54,11 @@ export abstract class BaseEnemyShip extends Actor {
     //   );
     //   console.log(JSON.stringify(points));
     // });
+    this.player = this.scene?.world.queryTags(["player"]).entities[0] as Player;
+
+    this.scene?.engine.clock.schedule(() => {
+      this._shoot();
+    }, 1000 + Math.random() * 1000);
   }
 
   onCollisionStart(
@@ -52,16 +67,79 @@ export abstract class BaseEnemyShip extends Actor {
     side: Side,
     contact: CollisionContact
   ): void {
-    if (other.owner instanceof Bullet) {
-      other.owner.kill();
-    }
     this.particleDamage(
       contact.points[0].x - this.pos.x,
       contact.points[0].y - this.pos.y
     );
+    if (other.owner instanceof Bullet) {
+      other.owner.kill();
+      this.damage(other.owner.getDamage());
+    }
   }
 
-  particleDamage(x: number, y: number) {
+  onPreUpdate(engine: Engine, delta: number): void {
+    if (this.pos.y > HEIGHT + 300) {
+      this.kill();
+    } else {
+      this.move(engine, delta, this.getPlayer());
+    }
+  }
+
+  private getPlayer() {
+    if (!this.player) throw new Error("Player not found");
+    return this.player;
+  }
+
+  private _shoot() {
+    this.shoot(this.getPlayer());
+    this.scene?.engine.clock.schedule(() => {
+      this._shoot();
+    }, 750 + Math.random() * 2000);
+  }
+
+  private damage(value: number) {
+    this.health -= value;
+    if (this.health <= 0) {
+      this.destroyParticle();
+      this.actions.scaleTo(Vector.Zero, Vector.One.scaleEqual(8)).die();
+    }
+  }
+
+  private destroyParticle() {
+    if (!this.scene) return;
+    const emitter = new ParticleEmitter({
+      emitterType: EmitterType.Circle,
+      radius: 30,
+      minVel: 50,
+      maxVel: 100,
+      minAngle: 0,
+      maxAngle: 6.2,
+      isEmitting: true,
+      emitRate: 300,
+      opacity: 1,
+      fadeFlag: true,
+      particleLife: 1200,
+      maxSize: 10,
+      minSize: 4,
+      acceleration: new Vector(0, 500),
+      beginColor: Color.Red,
+      x: this.pos.x,
+      y: this.pos.y,
+    });
+
+    this.scene.add(emitter);
+
+    this.scene.engine.clock.schedule(() => {
+      emitter.kill();
+    }, 100);
+  }
+
+  abstract move(engine: Engine, delta: number, player: Player): void;
+  abstract shoot(player: Player): void;
+
+  private particleDamage(x: number, y: number) {
+    if (!this.scene) return;
+
     const emitter = new ParticleEmitter({
       emitterType: EmitterType.Circle,
       radius: 0,
@@ -87,7 +165,7 @@ export abstract class BaseEnemyShip extends Actor {
 
     this.addChild(emitter);
 
-    setTimeout(() => {
+    this.scene.engine.clock.schedule(() => {
       this.removeChild(emitter);
     }, 100);
   }

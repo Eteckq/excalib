@@ -8,14 +8,14 @@ class Shooter extends Engine {
   constructor() {
     super({ width: WIDTH, height: HEIGHT, displayMode: DisplayMode.FitScreen });
   }
-  initialize() {
+  async initialize() {
     this.on("hidden", () => {
       // this.stop();
     });
 
     this.add("game", new Game());
-    this.start(loader);
-    this.goToScene("game");
+    await this.start(loader);
+    await this.goToScene("game");
   }
 }
 
