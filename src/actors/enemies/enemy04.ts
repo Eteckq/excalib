@@ -35,9 +35,13 @@ const COLLIDER = new PolygonCollider({
 export class EnemyShip04 extends BaseEnemyShip {
   constructor(x: number, y: number) {
     super(x, y, 50, SPRITE, COLLIDER);
+
+    this.vel = Vector.Down.scale(50);
   }
 
-  move(engine: Engine<any>, delta: number) {}
+  onCustomInit(engine: Engine<any>, player: Player): void {}
+
+  customUpdate(engine: Engine<any>, delta: number) {}
 
   shoot(player: Player) {}
 }

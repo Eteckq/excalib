@@ -37,7 +37,9 @@ const COLLIDER = new PolygonCollider({
 export class EnemyShip01 extends BaseEnemyShip {
   constructor(x: number, y: number) {
     super(x, y, 20, SPRITE, COLLIDER);
+  }
 
+  onCustomInit(engine: Engine<any>, player: Player): void {
     this.actions.repeatForever((repeatCtx) => {
       repeatCtx.moveTo(
         Math.random() * WIDTH,
@@ -47,12 +49,12 @@ export class EnemyShip01 extends BaseEnemyShip {
     });
   }
 
-  move(engine: Engine<any>, delta: number, player: Player) {}
+  customUpdate(engine: Engine<any>, delta: number, player: Player) {}
 
   shoot(player: Player) {
     const bullet = new EnemyBullet(this.pos.x, this.pos.y);
 
-    bullet.vel = new Vector(10, 200);
+    bullet.vel = new Vector(0, 200);
     this.scene?.add(bullet);
   }
 }

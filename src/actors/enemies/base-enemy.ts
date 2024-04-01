@@ -23,7 +23,7 @@ import { Player } from "../player";
 
 export abstract class BaseEnemyShip extends Actor {
   private dying = false;
-  protected player: Player | undefined = undefined;
+  private player: Player | undefined = undefined;
   constructor(
     x: number,
     y: number,
@@ -60,7 +60,11 @@ export abstract class BaseEnemyShip extends Actor {
     this.scene?.engine.clock.schedule(() => {
       this._shoot();
     }, 1000 + Math.random() * 1000);
+
+    this.onCustomInit(engine, this.player);
   }
+
+  abstract onCustomInit(engine: Engine, player: Player): void;
 
   onCollisionStart(
     self: Collider,
@@ -68,10 +72,10 @@ export abstract class BaseEnemyShip extends Actor {
     side: Side,
     contact: CollisionContact
   ): void {
-    this.particleDamage(
-      contact.points[0].x - this.pos.x,
-      contact.points[0].y - this.pos.y
-    );
+    contact.points.map((p) => {
+      this.particleDamage(p.x, p.y);
+    });
+
     if (other.owner instanceof BasicBullet) {
       other.owner.kill();
       this.damage(other.owner.getDamage());
@@ -82,11 +86,11 @@ export abstract class BaseEnemyShip extends Actor {
     if (this.pos.y > HEIGHT + 300) {
       this.kill();
     } else {
-      this.move(engine, delta, this.getPlayer());
+      this.customUpdate(engine, delta, this.getPlayer());
     }
   }
 
-  private getPlayer() {
+  protected getPlayer() {
     if (!this.player) throw new Error("Player not found");
     return this.player;
   }
@@ -140,7 +144,7 @@ export abstract class BaseEnemyShip extends Actor {
     }, 100);
   }
 
-  abstract move(engine: Engine, delta: number, player: Player): void;
+  abstract customUpdate(engine: Engine, delta: number, player: Player): void;
   abstract shoot(player: Player): void;
 
   private particleDamage(x: number, y: number) {
@@ -169,10 +173,10 @@ export abstract class BaseEnemyShip extends Actor {
       y: y,
     });
 
-    this.addChild(emitter);
+    this.scene.add(emitter);
 
     this.scene.engine.clock.schedule(() => {
-      this.removeChild(emitter);
-    }, 100);
+      emitter.kill();
+    }, 25);
   }
 }

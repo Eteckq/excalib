@@ -2,6 +2,8 @@ import { Engine, PolygonCollider, Sprite, Vector, vec } from "excalibur";
 import { Resources } from "../../resources";
 import { BaseEnemyShip } from "./base-enemy";
 import { Player } from "../player";
+import { HEIGHT, WIDTH } from "../../constants";
+import { EnemyBullet } from "../bullets/enemy-bullet";
 
 const COLLIDER_POINTS: [number, number][] = [
   [-5, 29],
@@ -36,7 +38,32 @@ export class EnemyShip02 extends BaseEnemyShip {
     super(x, y, 50, SPRITE, COLLIDER);
   }
 
-  move(engine: Engine<any>, delta: number) {}
+  onCustomInit(engine: Engine<any>, player: Player): void {
+    this.actions.repeatForever((repeatCtx) => {
+      const angle =
+        Math.atan2(player.pos.y - this.pos.y, player.pos.x - this.pos.x) -
+        Math.PI / 2;
+
+      repeatCtx
+        .rotateTo(angle, 8)
+        .callMethod(() => this.afterRotation(player))
+        .delay(200)
+        .rotateTo(0, 8)
+        .delay(200)
+        .moveTo(Math.random() * WIDTH, (Math.random() * HEIGHT) / 3, 500)
+        .delay(200);
+    });
+  }
+
+  customUpdate(engine: Engine<any>, delta: number, player: Player) {}
 
   shoot(player: Player) {}
+
+  private afterRotation(player: Player) {
+    const bullet = new EnemyBullet(this.pos.x, this.pos.y);
+    const direction = player.pos.sub(this.pos).normalize();
+
+    bullet.vel = direction.scale(200);
+    this.scene?.add(bullet);
+  }
 }

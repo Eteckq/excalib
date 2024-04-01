@@ -2,6 +2,8 @@ import { Engine, PolygonCollider, Sprite, Vector, vec } from "excalibur";
 import { Resources } from "../../resources";
 import { BaseEnemyShip } from "./base-enemy";
 import { Player } from "../player";
+import { HEIGHT, WIDTH } from "../../constants";
+import { EnemyBullet } from "../bullets/enemy-bullet";
 
 const COLLIDER_POINTS: [number, number][] = [
   [-10, 39],
@@ -35,7 +37,40 @@ export class EnemyShip05 extends BaseEnemyShip {
     super(x, y, 50, SPRITE, COLLIDER);
   }
 
-  move(engine: Engine<any>, delta: number) {}
+  onCustomInit(engine: Engine<any>, player: Player): void {
+    this.actions.repeatForever((repeatCtx) => {
+      repeatCtx
+        .moveTo(Math.random() * WIDTH, (Math.random() * HEIGHT) / 2, 90)
+        .delay(300)
+        .callMethod(() => this.customShoot(player))
+        .delay(300)
+        .callMethod(() => this.customShoot(player))
+        .delay(300)
+        .callMethod(() => this.customShoot(player))
+        .delay(300);
+    });
+  }
+
+  customUpdate(engine: Engine<any>, delta: number) {}
+
+  customShoot(player: Player) {
+    const nbrBullets = 5;
+    const spaceFactor = 0.3;
+    for (let bulletIndex = 0; bulletIndex < nbrBullets; bulletIndex++) {
+      let radian =
+        (Math.PI / nbrBullets / (nbrBullets / 2)) *
+        Math.round(bulletIndex / 2) *
+        spaceFactor;
+      if (bulletIndex % 2 == 0) {
+        radian *= -1;
+      }
+      radian += Math.PI / 2;
+      const bullet = new EnemyBullet(this.pos.x, this.pos.y);
+
+      bullet.vel = new Vector(Math.cos(radian), Math.sin(radian)).scale(200);
+      this.scene?.add(bullet);
+    }
+  }
 
   shoot(player: Player) {}
 }
