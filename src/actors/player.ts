@@ -14,11 +14,15 @@ import {
   vec,
 } from "excalibur";
 import { Resources } from "../resources";
-import { Weapon } from "./weapons/weapons";
+import { BlueWeapon } from "../weapons/blue-weapon";
 import { HEIGHT, WIDTH } from "../constants";
 import { PlayerCollisionMask } from "../colliders";
-import { BasicBullet } from "./bullets/bullet";
 import { EnemyBullet } from "./bullets/enemy-bullet";
+import { BasePowerup } from "./powerups/base-powerup";
+import { BaseWeapon } from "../weapons/base-weapons";
+import { BaseWeaponPowerup } from "./powerups/base-weapon-powerup";
+import { GreenWeapon } from "../weapons/green-weapon";
+import { RedWeapon } from "../weapons/red-weapon";
 
 const COLLIDER_POINTS: [number, number][] = [
   [6.5, 37.5],
@@ -43,7 +47,12 @@ const COLLIDER = new PolygonCollider({
 export class Player extends Actor {
   private keysPressed: Keys[] = [];
 
-  private weapons: Weapon[] = [new Weapon()];
+  private weapons: BaseWeapon[] = [
+    new BlueWeapon(),
+    new GreenWeapon(),
+    // new RedWeapon(),
+  ];
+  private weaponUpgrade: (typeof BaseWeapon)[] = [];
 
   private fireEmitter = new ParticleEmitter({
     beginColor: Color.Yellow,
@@ -74,6 +83,14 @@ export class Player extends Actor {
     this.addTag("player");
   }
 
+  private getWeaponPower(weapon: BaseWeapon) {
+    let weaponType: typeof BaseWeapon | null = null;
+    if (weapon instanceof BlueWeapon) weaponType = BlueWeapon;
+    if (weapon instanceof GreenWeapon) weaponType = GreenWeapon;
+    if (!weaponType) return 0;
+    return this.weaponUpgrade.filter((p) => p == weaponType).length;
+  }
+
   onCollisionStart(
     self: Collider,
     other: Collider,
@@ -81,6 +98,12 @@ export class Player extends Actor {
     contact: CollisionContact
   ): void {
     if (other.owner instanceof EnemyBullet) {
+      other.owner.kill();
+    }
+    if (other.owner instanceof BasePowerup) {
+      if (other.owner instanceof BaseWeaponPowerup)
+        this.weaponUpgrade.push(other.owner.weaponType);
+
       other.owner.kill();
     }
   }
@@ -100,7 +123,12 @@ export class Player extends Actor {
 
     const spacePressed = this.keysPressed.find((k) => k == Keys.Space);
     this.weapons.map((w) => w.reduceCooldown(delta));
-    if (spacePressed) this.weapons.map((w) => w.tryToShoot(this, engine));
+    if (spacePressed) {
+      for (const weapon of this.weapons) {
+        const power = this.getWeaponPower(weapon);
+        weapon.tryToShoot(this, engine, power);
+      }
+    }
   }
 
   private move() {

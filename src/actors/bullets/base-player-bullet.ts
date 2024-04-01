@@ -2,7 +2,7 @@ import { Actor, CollisionType, vec } from "excalibur";
 import { Resources } from "../../resources";
 import { PlayerCollisionMask } from "../../colliders";
 
-export class BasePlayerBullet extends Actor {
+export abstract class BasePlayerBullet extends Actor {
   constructor(
     x: number,
     y: number,

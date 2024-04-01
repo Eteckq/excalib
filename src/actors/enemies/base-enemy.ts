@@ -17,9 +17,10 @@ import {
   vec,
 } from "excalibur";
 import { EnemyCollisionMask } from "../../colliders";
-import { BasicBullet } from "../bullets/bullet";
+import { BlueBullet } from "../bullets/player/blue-bullet";
 import { HEIGHT, WIDTH } from "../../constants";
 import { Player } from "../player";
+import { BasePlayerBullet } from "../bullets/base-player-bullet";
 
 export abstract class BaseEnemyShip extends Actor {
   private dying = false;
@@ -37,10 +38,11 @@ export abstract class BaseEnemyShip extends Actor {
       collisionType: CollisionType.Passive,
 
       collisionGroup: EnemyCollisionMask,
-      collider: collider,
+      collider: collider.clone(),
     });
 
     this.graphics.add(sprite);
+    this.addTag("enemy");
   }
 
   onInitialize(engine: Engine) {
@@ -76,7 +78,7 @@ export abstract class BaseEnemyShip extends Actor {
       this.particleDamage(p.x, p.y);
     });
 
-    if (other.owner instanceof BasicBullet) {
+    if (other.owner instanceof BasePlayerBullet) {
       other.owner.kill();
       this.damage(other.owner.getDamage());
     }

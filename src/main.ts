@@ -2,7 +2,6 @@ import { DisplayMode, Engine } from "excalibur";
 import { loader } from "./resources";
 import { HEIGHT, WIDTH } from "./constants";
 import { Game } from "./scenes/game";
-import { DevTool } from "@excaliburjs/dev-tools";
 
 class Shooter extends Engine {
   constructor() {
@@ -20,5 +19,6 @@ class Shooter extends Engine {
 }
 
 export const shooter = new Shooter();
+
 shooter.initialize();
-// shooter.showDebug(true);
+shooter.showDebug(true);
