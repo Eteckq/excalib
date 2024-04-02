@@ -1,14 +1,7 @@
-import {
-  Actor,
-  CollisionType,
-  Engine,
-  ImageSource,
-  Vector,
-  vec,
-} from "excalibur";
-import { Resources } from "../../resources";
-import { PlayerCollisionMask, PowerUpCanCollideWith } from "../../colliders";
+import { Actor, CollisionType, Engine, ImageSource, Vector } from "excalibur";
+import { PowerUpCanCollideWith } from "../../colliders";
 import { HEIGHT, WIDTH } from "../../constants";
+import { Player } from "../player";
 
 export abstract class BasePowerup extends Actor {
   private speed = 100;
@@ -42,4 +35,6 @@ export abstract class BasePowerup extends Actor {
       this.vel.y = this.speed;
     }
   }
+
+  public abstract onPlayerTake(player: Player): void;
 }

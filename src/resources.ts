@@ -11,6 +11,7 @@ import ufo from "./images/ufo.png";
 import bullet from "./images/bullet.png";
 import powerUpBlue from "./images/powerupBlue_star.png";
 import powerUpGreen from "./images/powerupGreen_star.png";
+import powerUpSlot from "./images/powerupSlot.png";
 
 export const Resources = {
   PlayerShip: new ImageSource(playerShip),
@@ -25,6 +26,7 @@ export const Resources = {
   BulletSheet: new ImageSource(bullet),
   PowerupBlue: new ImageSource(powerUpBlue),
   PowerupGreen: new ImageSource(powerUpGreen),
+  PowerUpSlot: new ImageSource(powerUpSlot),
 } as const;
 
 export const BulletSheet = SpriteSheet.fromImageSource({

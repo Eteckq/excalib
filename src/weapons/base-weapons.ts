@@ -1,5 +1,4 @@
-import { Collider, CollisionContact, Engine, Side, Vector } from "excalibur";
-import { BlueBullet } from "../actors/bullets/player/blue-bullet";
+import { Engine } from "excalibur";
 import { Player } from "../actors/player";
 
 export abstract class BaseWeapon {
@@ -20,4 +19,5 @@ export abstract class BaseWeapon {
   }
 
   protected abstract shoot(player: Player, engine: Engine, power: number): void;
+  public abstract instance(): typeof BaseWeapon;
 }

@@ -7,8 +7,8 @@ import { EnemyShip05 } from "./actors/enemies/enemy05";
 import { EnemyShip06 } from "./actors/enemies/enemy06";
 import { BasePowerup } from "./actors/powerups/base-powerup";
 import { SlotPowerup } from "./actors/powerups/slot-powerup";
-import { Weapon01Powerup } from "./actors/powerups/weapon01-powerup";
-import { Weapon02Powerup } from "./actors/powerups/weapon02-powerup";
+import { BluePowerup } from "./actors/powerups/weapon/blue-powerup";
+import { GreenPowerup } from "./actors/powerups/weapon/green-powerup";
 
 interface EnemyConfig {
   enemyType: typeof BaseEnemyShip;
@@ -25,7 +25,7 @@ class PoolPicker {
     { enemyType: EnemyShip06, canStartAtWave: 25 },
   ];
 
-  private spawnablePowerups = [Weapon01Powerup, Weapon02Powerup, SlotPowerup];
+  private spawnablePowerups = [BluePowerup, GreenPowerup, SlotPowerup];
 
   public getRandomPowerup() {
     return this.spawnablePowerups[

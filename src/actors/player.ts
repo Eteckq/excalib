@@ -20,11 +20,9 @@ import { PlayerCollisionMask } from "../colliders";
 import { EnemyBullet } from "./bullets/enemy-bullet";
 import { BasePowerup } from "./powerups/base-powerup";
 import { BaseWeapon } from "../weapons/base-weapons";
-import { BaseWeaponPowerup } from "./powerups/base-weapon-powerup";
+import { BaseWeaponPowerup } from "./powerups/weapon/base-weapon-powerup";
 import { GreenWeapon } from "../weapons/green-weapon";
-import { RedWeapon } from "../weapons/red-weapon";
 import { Game } from "../scenes/game";
-import { SlotPowerup } from "./powerups/slot-powerup";
 
 const COLLIDER_POINTS: [number, number][] = [
   [6.5, 37.5],
@@ -46,15 +44,15 @@ const COLLIDER_POINTS: [number, number][] = [
 const COLLIDER = new PolygonCollider({
   points: COLLIDER_POINTS.map((p) => vec(p[0], p[1])),
 }).triangulate();
+
+const WEAPONS_TYPES = [BlueWeapon, GreenWeapon];
+
 export class Player extends Actor {
   private keysPressed: Keys[] = [];
 
-  private weapons: BaseWeapon[] = [
-    new BlueWeapon(),
-    new GreenWeapon(),
-    // new RedWeapon(),
-  ];
-  private weaponUpgrade: (typeof BaseWeapon)[] = [];
+  private weapons = WEAPONS_TYPES.map((wt) => new wt());
+
+  private weaponUpgrade: BaseWeaponPowerup[] = [];
 
   private fireEmitter = new ParticleEmitter({
     beginColor: Color.Yellow,
@@ -88,11 +86,8 @@ export class Player extends Actor {
   }
 
   private getWeaponPower(weapon: BaseWeapon) {
-    let weaponType: typeof BaseWeapon | null = null;
-    if (weapon instanceof BlueWeapon) weaponType = BlueWeapon;
-    if (weapon instanceof GreenWeapon) weaponType = GreenWeapon;
-    if (!weaponType) return 0;
-    return this.weaponUpgrade.filter((p) => p == weaponType).length;
+    return this.weaponUpgrade.filter((p) => p.weaponType == weapon.instance())
+      .length;
   }
 
   onCollisionStart(
@@ -106,10 +101,7 @@ export class Player extends Actor {
     }
 
     if (other.owner instanceof BasePowerup) {
-      if (other.owner instanceof BaseWeaponPowerup)
-        this.pushWeaponUpgrade(other.owner);
-      if (other.owner instanceof SlotPowerup) this.addSlot();
-
+      other.owner.onPlayerTake(this);
       other.owner.kill();
     }
   }
@@ -128,7 +120,7 @@ export class Player extends Actor {
     if (this.weaponUpgrade.length == this.maxPowerups) {
       this.popWeaponUpgrade();
     }
-    this.weaponUpgrade.push(powerUp.weaponType);
+    this.weaponUpgrade.push(powerUp);
     (this.scene as Game).slotsUi.appendPowerup(powerUp.image);
   }
 
@@ -142,6 +134,7 @@ export class Player extends Actor {
     if (this.weaponUpgrade.length == 0) return;
     const weaponType = this.weaponUpgrade.shift();
     if (!weaponType) throw new Error("Impossible to shift empty array");
+    weaponType.onPlayerUse(this);
     (this.scene as Game).slotsUi.shiftPowerup();
   }
 

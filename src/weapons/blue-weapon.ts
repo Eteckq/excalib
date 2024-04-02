@@ -1,4 +1,4 @@
-import { Collider, CollisionContact, Engine, Side, Vector } from "excalibur";
+import { Engine, Vector } from "excalibur";
 import { BlueBullet } from "../actors/bullets/player/blue-bullet";
 import { Player } from "../actors/player";
 import { BaseWeapon } from "./base-weapons";
@@ -6,6 +6,10 @@ import { BaseWeapon } from "./base-weapons";
 export class BlueWeapon extends BaseWeapon {
   constructor() {
     super();
+  }
+
+  instance() {
+    return BlueWeapon;
   }
 
   public shoot(player: Player, engine: Engine, power = 0) {
