@@ -21,20 +21,27 @@ import { Resources } from "../resources";
 
 class SlotUI {
   private domElement: HTMLElement;
-  constructor(_domElement: HTMLElement | null) {
+  private images: ImageSource[] = [];
+
+  constructor(_domElement: HTMLElement | null, private slotNbr: number) {
     if (_domElement == null) throw new Error("UI Dom not found");
     this.domElement = _domElement;
   }
 
-  public constructUi(slotNbr: number) {
+  public constructUi() {
     this.domElement.classList.add("BonusUI");
-    for (let slotId = 0; slotId < slotNbr; slotId++) {
-      const slot = document.createElement("div");
-      slot.className = "slot";
-      slot.id = `slot-${slotId}`;
-
-      this.domElement.appendChild(slot);
+    for (let slotId = 0; slotId < this.slotNbr; slotId++) {
+      this.createSlot(slotId);
     }
+  }
+
+  private createSlot(id: number) {
+    const slot = document.createElement("div");
+    slot.className = "slot";
+    slot.id = `slot-${id}`;
+
+    this.domElement.appendChild(slot);
+    return slot;
   }
 
   public destroyUi() {
@@ -42,10 +49,42 @@ class SlotUI {
     this.domElement.innerHTML = "";
   }
 
-  public setIcon(slot: number, image: ImageSource) {
-    const slotElement = this.domElement.querySelector(`#slot-${slot}`);
-    if (!slotElement) throw new Error("Unable to find slot");
-    slotElement.style.backgroundImage = `url('${image.path}')`;
+  private setIcon(slot: number, image: ImageSource) {
+    let slotElement = this.domElement.querySelector(`#slot-${slot}`);
+    if (!slotElement) {
+      slotElement = this.createSlot(this.slotNbr - 1);
+    }
+    if (!image) {
+      slotElement.style.backgroundImage = ``;
+    } else {
+      slotElement.style.backgroundImage = `url('${image.path}')`;
+    }
+  }
+
+  public appendPowerup(image: ImageSource) {
+    this.images.unshift(image);
+    this.refreshUi();
+  }
+
+  public refreshUi() {
+    for (let slotId = 0; slotId < this.slotNbr; slotId++) {
+      this.setIcon(slotId, this.images[slotId]);
+    }
+  }
+
+  public popPowerup() {
+    this.images.pop();
+  }
+
+  public shiftPowerup() {
+    this.images.shift();
+    this.refreshUi();
+  }
+
+  public addSlot() {
+    if (this.slotNbr == 8) return;
+    this.slotNbr++;
+    this.refreshUi();
   }
 }
 
@@ -58,14 +97,14 @@ export class Game extends Scene {
     interval: 8000,
   });
 
-  public slotsUi = new SlotUI(document.getElementById("slots"));
+  public slotsUi = new SlotUI(document.getElementById("slots"), 3);
 
   constructor() {
     super();
   }
 
   onActivate(context: SceneActivationContext<unknown>): void {
-    this.slotsUi.constructUi(8);
+    this.slotsUi.constructUi();
   }
 
   onDeactivate() {

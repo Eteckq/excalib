@@ -1,11 +1,18 @@
-import { Actor, CollisionType, Engine, Vector, vec } from "excalibur";
+import {
+  Actor,
+  CollisionType,
+  Engine,
+  ImageSource,
+  Vector,
+  vec,
+} from "excalibur";
 import { Resources } from "../../resources";
 import { PlayerCollisionMask, PowerUpCanCollideWith } from "../../colliders";
 import { HEIGHT, WIDTH } from "../../constants";
 
 export abstract class BasePowerup extends Actor {
-  private speed = 100
-  constructor(x: number, y: number) {
+  private speed = 100;
+  constructor(x: number, y: number, public image: ImageSource) {
     super({
       x,
       y,
@@ -15,13 +22,13 @@ export abstract class BasePowerup extends Actor {
       collisionGroup: PowerUpCanCollideWith,
     });
     this.vel = new Vector(this.speed, this.speed);
-
+    this.graphics.add(image.toSprite());
   }
 
   onInitialize(engine: Engine<any>): void {
-    engine.clock.schedule(()=> {
-      this.actions.blink(100, 100, 10).die()
-    }, 6000)
+    engine.clock.schedule(() => {
+      this.actions.blink(100, 100, 10).die();
+    }, 6000);
   }
 
   onPreUpdate(engine: Engine<any>, delta: number): void {

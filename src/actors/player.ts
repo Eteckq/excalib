@@ -24,6 +24,7 @@ import { BaseWeaponPowerup } from "./powerups/base-weapon-powerup";
 import { GreenWeapon } from "../weapons/green-weapon";
 import { RedWeapon } from "../weapons/red-weapon";
 import { Game } from "../scenes/game";
+import { SlotPowerup } from "./powerups/slot-powerup";
 
 const COLLIDER_POINTS: [number, number][] = [
   [6.5, 37.5],
@@ -72,6 +73,8 @@ export class Player extends Actor {
 
   private lastState: "up" | "down" | "neutral" = "neutral";
 
+  private maxPowerups = 3;
+
   constructor() {
     super({
       x: WIDTH / 2,
@@ -105,6 +108,7 @@ export class Player extends Actor {
     if (other.owner instanceof BasePowerup) {
       if (other.owner instanceof BaseWeaponPowerup)
         this.pushWeaponUpgrade(other.owner);
+      if (other.owner instanceof SlotPowerup) this.addSlot();
 
       other.owner.kill();
     }
@@ -121,11 +125,29 @@ export class Player extends Actor {
   }
 
   pushWeaponUpgrade(powerUp: BaseWeaponPowerup) {
+    if (this.weaponUpgrade.length == this.maxPowerups) {
+      this.popWeaponUpgrade();
+    }
     this.weaponUpgrade.push(powerUp.weaponType);
-    (this.scene as Game).slotsUi.setIcon(
-      this.weaponUpgrade.length - 1,
-      powerUp.image
-    );
+    (this.scene as Game).slotsUi.appendPowerup(powerUp.image);
+  }
+
+  popWeaponUpgrade() {
+    const weaponType = this.weaponUpgrade.pop();
+    if (!weaponType) throw new Error("Impossible to pop empty array");
+    (this.scene as Game).slotsUi.popPowerup();
+  }
+
+  shiftWeaponUpgrade() {
+    if (this.weaponUpgrade.length == 0) return;
+    const weaponType = this.weaponUpgrade.shift();
+    if (!weaponType) throw new Error("Impossible to shift empty array");
+    (this.scene as Game).slotsUi.shiftPowerup();
+  }
+
+  addSlot() {
+    this.maxPowerups++;
+    (this.scene as Game).slotsUi.addSlot();
   }
 
   onPreUpdate(engine: Engine, delta: number): void {
@@ -197,7 +219,11 @@ export class Player extends Actor {
   }
 
   private addKey(key: Keys) {
-    this.keysPressed.push(key);
+    if (key == Keys.ShiftLeft || key == Keys.ShiftRight) {
+      this.shiftWeaponUpgrade();
+    } else {
+      this.keysPressed.push(key);
+    }
   }
 
   private removeKey(key: Keys) {

@@ -9,9 +9,8 @@ export abstract class BaseWeaponPowerup extends BasePowerup {
     x: number,
     y: number,
     public weaponType: typeof BaseWeapon,
-    public image: ImageSource
+    image: ImageSource
   ) {
-    super(x, y);
-    this.graphics.add(image.toSprite());
+    super(x, y, image);
   }
 }
