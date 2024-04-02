@@ -23,6 +23,18 @@ export class BlueWeapon extends BaseWeapon {
           new BlueBullet(player.pos.x + nosePos.x, player.pos.y + nosePos.y)
         );
         break;
+      case 2:
+        this.cooldown = 100;
+        engine.add(
+          new BlueBullet(player.pos.x + nosePos.x, player.pos.y + nosePos.y)
+        );
+        break;
+      case 3:
+        this.cooldown = 50;
+        engine.add(
+          new BlueBullet(player.pos.x + nosePos.x, player.pos.y + nosePos.y)
+        );
+        break;
     }
   }
 }

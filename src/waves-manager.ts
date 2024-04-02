@@ -35,8 +35,17 @@ class PoolPicker {
   public getEnemiesForWave(wave: number) {
     const max = Math.round(5 + wave / (6 + Math.random() * 8));
     const enemies = [];
+    const pool = [];
+    for (const enemyConfig of this.enemyConfigs) {
+      if (wave >= enemyConfig.canStartAtWave) {
+        pool.push({
+          enemyType: enemyConfig.enemyType,
+          weight: 0.5,
+        });
+      }
+    }
     for (let nbrEnemies = 0; nbrEnemies < max; nbrEnemies++) {
-      enemies.push(this.enemyConfigs[0].enemyType);
+      enemies.push(pool[Math.floor(Math.random() * pool.length)].enemyType);
     }
 
     return enemies;

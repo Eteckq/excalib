@@ -21,6 +21,24 @@ export class GreenWeapon extends BaseWeapon {
         }
         this.switchSide = !this.switchSide;
         break;
+      case 2:
+        this.cooldown = 100;
+        if (this.switchSide) {
+          engine.add(new GreenBullet(player.pos.x + 25, player.pos.y));
+        } else {
+          engine.add(new GreenBullet(player.pos.x - 25, player.pos.y));
+        }
+        this.switchSide = !this.switchSide;
+        break;
+      case 3:
+        this.cooldown = 50;
+        if (this.switchSide) {
+          engine.add(new GreenBullet(player.pos.x + 25, player.pos.y));
+        } else {
+          engine.add(new GreenBullet(player.pos.x - 25, player.pos.y));
+        }
+        this.switchSide = !this.switchSide;
+        break;
     }
   }
 }

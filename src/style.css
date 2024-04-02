@@ -3,3 +3,24 @@
     background-color: black;
   }
 }
+
+#root {
+  position: relative;
+}
+
+#root #slots {
+  z-index: 100;
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  display: flex;
+  gap: 10px;
+}
+
+#root #slots .slot {
+  border: 1px rgba(0, 0, 0, 0.5) solid;
+  border-radius: 10px;
+  height: 50px;
+  width: 50px;
+  background-size: cover;
+}

@@ -5,7 +5,12 @@ import { Game } from "./scenes/game";
 
 class Shooter extends Engine {
   constructor() {
-    super({ width: WIDTH, height: HEIGHT, displayMode: DisplayMode.FitScreen });
+    super({
+      width: WIDTH,
+      height: HEIGHT,
+      displayMode: DisplayMode.FitScreen,
+      canvasElementId: "game",
+    });
   }
   async initialize() {
     this.on("hidden", () => {
@@ -21,4 +26,4 @@ class Shooter extends Engine {
 export const shooter = new Shooter();
 
 shooter.initialize();
-shooter.showDebug(true);
+// shooter.showDebug(true);

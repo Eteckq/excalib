@@ -3,6 +3,7 @@ import {
   Animation,
   AnimationStrategy,
   CollisionType,
+  Engine,
   Vector,
   vec,
 } from "excalibur";
@@ -28,5 +29,12 @@ export class EnemyBullet extends Actor {
     );
     this.graphics.use(anim);
   }
+
+  onPreUpdate(engine: Engine<any>, delta: number): void {
+    if (this.isOffScreen) {
+      this.kill();
+    }
+  }
+
   public onInitialize() {}
 }

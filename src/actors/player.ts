@@ -23,6 +23,7 @@ import { BaseWeapon } from "../weapons/base-weapons";
 import { BaseWeaponPowerup } from "./powerups/base-weapon-powerup";
 import { GreenWeapon } from "../weapons/green-weapon";
 import { RedWeapon } from "../weapons/red-weapon";
+import { Game } from "../scenes/game";
 
 const COLLIDER_POINTS: [number, number][] = [
   [6.5, 37.5],
@@ -73,7 +74,7 @@ export class Player extends Actor {
 
   constructor() {
     super({
-      x: 150,
+      x: WIDTH / 2,
       y: 600 - 40,
       collisionType: CollisionType.Fixed,
       collisionGroup: PlayerCollisionMask,
@@ -100,9 +101,10 @@ export class Player extends Actor {
     if (other.owner instanceof EnemyBullet) {
       other.owner.kill();
     }
+
     if (other.owner instanceof BasePowerup) {
       if (other.owner instanceof BaseWeaponPowerup)
-        this.weaponUpgrade.push(other.owner.weaponType);
+        this.pushWeaponUpgrade(other.owner);
 
       other.owner.kill();
     }
@@ -116,6 +118,14 @@ export class Player extends Actor {
     );
     this.addChild(this.fireEmitter);
     this.z = 1;
+  }
+
+  pushWeaponUpgrade(powerUp: BaseWeaponPowerup) {
+    this.weaponUpgrade.push(powerUp.weaponType);
+    (this.scene as Game).slotsUi.setIcon(
+      this.weaponUpgrade.length - 1,
+      powerUp.image
+    );
   }
 
   onPreUpdate(engine: Engine, delta: number): void {
