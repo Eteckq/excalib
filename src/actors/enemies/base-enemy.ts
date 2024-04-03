@@ -15,6 +15,7 @@ import { EnemyCollisionMask } from "../../colliders";
 import { HEIGHT } from "../../constants";
 import { Player } from "../player";
 import { BasePlayerBullet } from "../bullets/base-player-bullet";
+import { Game } from "../../scenes/game";
 
 export abstract class BaseEnemyShip extends Actor {
   private dying = false;
@@ -23,6 +24,7 @@ export abstract class BaseEnemyShip extends Actor {
     x: number,
     y: number,
     private health: number,
+    private score: number,
     sprite: Sprite,
     collider: Collider
   ) {
@@ -105,6 +107,8 @@ export abstract class BaseEnemyShip extends Actor {
     if (this.health <= 0) {
       this.destroyParticle();
       this.dying = true;
+      (this.scene as Game).score += this.score;
+      (this.scene as Game).scoreUi.setScore((this.scene as Game).score);
       this.body.collisionType = CollisionType.PreventCollision;
       this.actions.clearActions();
       this.actions.scaleTo(Vector.Zero, new Vector(8, 8)).die();

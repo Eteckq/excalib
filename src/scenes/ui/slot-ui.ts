@@ -3,12 +3,11 @@ import { BaseUI } from "./base-ui";
 import { BaseWeaponPowerup } from "../../actors/powerups/weapon/base-weapon-powerup";
 
 export class SlotUI extends BaseUI {
-  constructor(_domElement: HTMLElement | null, private slotNbr: number) {
-    super(_domElement);
+  constructor(id: string, private slotNbr: number) {
+    super(id);
   }
 
-  public constructUi() {
-    this.domElement.classList.add("BonusUI");
+  constructUi() {
     for (let slotId = 0; slotId < this.slotNbr; slotId++) {
       this.createSlot(slotId);
     }
@@ -19,17 +18,12 @@ export class SlotUI extends BaseUI {
     slot.className = "slot";
     slot.id = `slot-${id}`;
 
-    this.domElement.appendChild(slot);
+    this.getDomElement().appendChild(slot);
     return slot;
   }
 
-  public destroyUi() {
-    this.domElement.classList.remove("BonusUI");
-    this.domElement.innerHTML = "";
-  }
-
   private setIcon(slot: number, image: ImageSource) {
-    let slotElement = this.domElement.querySelector(`#slot-${slot}`);
+    let slotElement = this.getDomElement().querySelector(`#slot-${slot}`);
     if (!slotElement) {
       slotElement = this.createSlot(this.slotNbr - 1);
     }

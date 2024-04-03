@@ -4,12 +4,17 @@
   }
 }
 
+html {
+  font-family: "Press Start 2P", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+
 #root {
   position: relative;
 }
 
 #root #slots {
-  z-index: 100;
   position: absolute;
   bottom: 15px;
   left: 15px;
@@ -23,4 +28,10 @@
   height: 50px;
   width: 50px;
   background-size: cover;
+}
+
+#root #score {
+  position: absolute;
+  top: 15px;
+  left: 15px;
 }

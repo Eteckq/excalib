@@ -2,7 +2,7 @@ import { Engine, PolygonCollider, Sprite, Vector, vec } from "excalibur";
 import { Resources } from "../../resources";
 import { BaseEnemyShip } from "./base-enemy";
 import { Player } from "../player";
-import { EnemiesHealth } from "../../parameters";
+import { EnemiesHealth, EnemiesScore } from "../../parameters";
 
 const COLLIDER_POINTS: [number, number][] = [
   [-16, 79],
@@ -35,7 +35,7 @@ const COLLIDER = new PolygonCollider({
 
 export class EnemyShip04 extends BaseEnemyShip {
   constructor(x: number, y: number) {
-    super(x, y, EnemiesHealth.Enemy04, SPRITE, COLLIDER);
+    super(x, y, EnemiesHealth.Enemy04, EnemiesScore.Enemy04, SPRITE, COLLIDER);
 
     this.vel = Vector.Down.scale(40);
   }

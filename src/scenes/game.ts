@@ -9,6 +9,7 @@ import { Player } from "../actors/player";
 import { WIDTH } from "../constants";
 import { WavesManager } from "../waves-manager";
 import { SlotUI } from "./ui/slot-ui";
+import { ScoreUI } from "./ui/score-ui";
 
 export class Game extends Scene {
   random = new Random(); // seeded random
@@ -19,9 +20,12 @@ export class Game extends Scene {
     interval: 8000,
   });
 
+  public score = 0;
+
   private queryEnemies = this.world.queryTags(["enemy"]);
 
-  public slotsUi = new SlotUI(document.getElementById("slots"), 3);
+  public slotsUi = new SlotUI("slots", 3);
+  public scoreUi = new ScoreUI("score");
 
   constructor() {
     super();
@@ -29,10 +33,12 @@ export class Game extends Scene {
 
   onActivate(context: SceneActivationContext<unknown>): void {
     this.slotsUi.constructUi();
+    this.scoreUi.constructUi();
   }
 
   onDeactivate() {
     this.slotsUi.destroyUi();
+    this.scoreUi.destroyUi();
   }
 
   onInitialize(engine: Engine) {
@@ -59,12 +65,6 @@ export class Game extends Scene {
   }
 
   newWave() {
-    this.spawnPowerup();
-    this.spawnPowerup();
-    this.spawnPowerup();
-    this.spawnPowerup();
-    this.spawnPowerup();
-    this.spawnPowerup();
     this.spawnPowerup();
     const enemies = this.waveManager.nextWave();
     for (const enemy of enemies) {

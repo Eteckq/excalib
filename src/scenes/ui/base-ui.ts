@@ -1,11 +1,21 @@
 export abstract class BaseUI {
   protected domElement: HTMLElement;
 
-  constructor(_domElement: HTMLElement | null) {
-    if (_domElement == null) throw new Error("UI Dom not found");
-    this.domElement = _domElement;
+  constructor(private id: string) {
+    const rootElement = document.getElementById("root");
+    if (rootElement == null) throw new Error("UI Dom not found");
+    this.domElement = document.createElement("div");
+    this.domElement.id = this.id;
+    rootElement.appendChild(this.domElement);
+  }
+
+  protected getDomElement() {
+    return this.domElement;
   }
 
   public abstract constructUi(): void;
-  public abstract destroyUi(): void;
+
+  public destroyUi() {
+    this.getDomElement().innerHTML = "";
+  }
 }
