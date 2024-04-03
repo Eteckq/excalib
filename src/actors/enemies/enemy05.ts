@@ -4,6 +4,7 @@ import { BaseEnemyShip } from "./base-enemy";
 import { Player } from "../player";
 import { HEIGHT, WIDTH } from "../../constants";
 import { EnemyBullet } from "../bullets/enemy-bullet";
+import { EnemiesHealth } from "../../parameters";
 
 const COLLIDER_POINTS: [number, number][] = [
   [-10, 39],
@@ -34,7 +35,7 @@ const COLLIDER = new PolygonCollider({
 
 export class EnemyShip05 extends BaseEnemyShip {
   constructor(x: number, y: number) {
-    super(x, y, 50, SPRITE, COLLIDER);
+    super(x, y, EnemiesHealth.Enemy05, SPRITE, COLLIDER);
   }
 
   onCustomInit(engine: Engine<any>, player: Player): void {
@@ -67,7 +68,7 @@ export class EnemyShip05 extends BaseEnemyShip {
       radian += Math.PI / 2;
       const bullet = new EnemyBullet(this.pos.x, this.pos.y);
 
-      bullet.vel = new Vector(Math.cos(radian), Math.sin(radian)).scale(200);
+      bullet.vel = new Vector(Math.cos(radian), Math.sin(radian)).scale(180);
       this.scene?.add(bullet);
     }
   }

@@ -1,9 +1,8 @@
 import { ImageSource } from "excalibur";
 import { BaseUI } from "./base-ui";
+import { BaseWeaponPowerup } from "../../actors/powerups/weapon/base-weapon-powerup";
 
 export class SlotUI extends BaseUI {
-  private images: ImageSource[] = [];
-
   constructor(_domElement: HTMLElement | null, private slotNbr: number) {
     super(_domElement);
   }
@@ -41,29 +40,14 @@ export class SlotUI extends BaseUI {
     }
   }
 
-  public appendPowerup(image: ImageSource) {
-    this.images.unshift(image);
-    this.refreshUi();
-  }
-
-  public refreshUi() {
-    for (let slotId = 0; slotId < this.slotNbr; slotId++) {
-      this.setIcon(slotId, this.images[slotId]);
+  setPowerups(weaponUpgrades: BaseWeaponPowerup[]) {
+    for (let i = 0; i < this.slotNbr; i++) {
+      this.setIcon(i, weaponUpgrades[i]?.image);
     }
-  }
-
-  public popPowerup() {
-    this.images.pop();
-  }
-
-  public shiftPowerup() {
-    this.images.shift();
-    this.refreshUi();
   }
 
   public addSlot() {
     if (this.slotNbr == 8) return;
     this.slotNbr++;
-    this.refreshUi();
   }
 }

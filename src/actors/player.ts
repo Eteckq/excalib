@@ -116,31 +116,33 @@ export class Player extends Actor {
     this.z = 1;
   }
 
-  pushWeaponUpgrade(powerUp: BaseWeaponPowerup) {
+  public pushWeaponUpgrade(powerUp: BaseWeaponPowerup) {
     if (this.weaponUpgrade.length == this.maxPowerups) {
       this.popWeaponUpgrade();
     }
-    this.weaponUpgrade.push(powerUp);
-    (this.scene as Game).slotsUi.appendPowerup(powerUp.image);
+    this.weaponUpgrade.unshift(powerUp);
+    (this.scene as Game).slotsUi.setPowerups(this.weaponUpgrade);
   }
 
-  popWeaponUpgrade() {
+  private popWeaponUpgrade() {
     const weaponType = this.weaponUpgrade.pop();
     if (!weaponType) throw new Error("Impossible to pop empty array");
-    (this.scene as Game).slotsUi.popPowerup();
+    (this.scene as Game).slotsUi.setPowerups(this.weaponUpgrade);
   }
 
-  shiftWeaponUpgrade() {
+  private shiftWeaponUpgrade() {
     if (this.weaponUpgrade.length == 0) return;
     const weaponType = this.weaponUpgrade.shift();
     if (!weaponType) throw new Error("Impossible to shift empty array");
     weaponType.onPlayerUse(this);
-    (this.scene as Game).slotsUi.shiftPowerup();
+    (this.scene as Game).slotsUi.setPowerups(this.weaponUpgrade);
   }
 
-  addSlot() {
+  public addSlot() {
+    if (this.maxPowerups == 8) return;
     this.maxPowerups++;
     (this.scene as Game).slotsUi.addSlot();
+    (this.scene as Game).slotsUi.setPowerups(this.weaponUpgrade);
   }
 
   onPreUpdate(engine: Engine, delta: number): void {

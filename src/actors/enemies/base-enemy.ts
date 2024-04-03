@@ -1,7 +1,5 @@
 import {
   Actor,
-  CircleCollider,
-  Clock,
   Collider,
   CollisionContact,
   CollisionType,
@@ -9,16 +7,12 @@ import {
   EmitterType,
   Engine,
   ParticleEmitter,
-  PolygonCollider,
   Side,
   Sprite,
-  Timer,
   Vector,
-  vec,
 } from "excalibur";
 import { EnemyCollisionMask } from "../../colliders";
-import { BlueBullet } from "../bullets/player/blue-bullet";
-import { HEIGHT, WIDTH } from "../../constants";
+import { HEIGHT } from "../../constants";
 import { Player } from "../player";
 import { BasePlayerBullet } from "../bullets/base-player-bullet";
 

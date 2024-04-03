@@ -1,9 +1,10 @@
-import { Engine, PolygonCollider, Sprite, Vector, vec } from "excalibur";
+import { Engine, PolygonCollider, Sprite, vec } from "excalibur";
 import { Resources } from "../../resources";
 import { BaseEnemyShip } from "./base-enemy";
 import { Player } from "../player";
 import { HEIGHT, WIDTH } from "../../constants";
 import { EnemyBullet } from "../bullets/enemy-bullet";
+import { EnemiesHealth } from "../../parameters";
 
 const COLLIDER_POINTS: [number, number][] = [
   [-5, 29],
@@ -35,7 +36,7 @@ const COLLIDER = new PolygonCollider({
 
 export class EnemyShip02 extends BaseEnemyShip {
   constructor(x: number, y: number) {
-    super(x, y, 50, SPRITE, COLLIDER);
+    super(x, y, EnemiesHealth.Enemy02, SPRITE, COLLIDER);
   }
 
   onCustomInit(engine: Engine<any>, player: Player): void {
@@ -63,7 +64,7 @@ export class EnemyShip02 extends BaseEnemyShip {
     const bullet = new EnemyBullet(this.pos.x, this.pos.y);
     const direction = player.pos.sub(this.pos).normalize();
 
-    bullet.vel = direction.scale(200);
+    bullet.vel = direction.scale(250);
     this.scene?.add(bullet);
   }
 }

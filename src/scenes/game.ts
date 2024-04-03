@@ -8,7 +8,7 @@ import {
 import { Player } from "../actors/player";
 import { WIDTH } from "../constants";
 import { WavesManager } from "../waves-manager";
-import { SlotUI } from "../ui/slot-ui";
+import { SlotUI } from "./ui/slot-ui";
 
 export class Game extends Scene {
   random = new Random(); // seeded random
@@ -18,6 +18,8 @@ export class Game extends Scene {
     repeats: true,
     interval: 8000,
   });
+
+  private queryEnemies = this.world.queryTags(["enemy"]);
 
   public slotsUi = new SlotUI(document.getElementById("slots"), 3);
 
@@ -47,13 +49,22 @@ export class Game extends Scene {
   }
 
   onPreUpdate(engine: Engine<any>, delta: number): void {
-    if (this.world.queryTags(["enemy"]).entities.length == 0) {
+    const enemiesLength = this.queryEnemies.entities.length;
+    if (enemiesLength == 0) {
       this.newWave();
+      this.timer.reset();
+    } else if (enemiesLength > 16) {
       this.timer.reset();
     }
   }
 
   newWave() {
+    this.spawnPowerup();
+    this.spawnPowerup();
+    this.spawnPowerup();
+    this.spawnPowerup();
+    this.spawnPowerup();
+    this.spawnPowerup();
     this.spawnPowerup();
     const enemies = this.waveManager.nextWave();
     for (const enemy of enemies) {
